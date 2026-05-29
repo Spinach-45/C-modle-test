@@ -143,7 +143,7 @@ export default function OrdersPage() {
 function OrderCard({ order, today, onDetail, onRefund, onChange, onPay }) {
   const typeInfo = TRAIN_TYPES[order.train.type] ?? {};
   const statusInfo = ORDER_STATUSES[order.status] ?? {};
-  const canRefund = order.status === 'paid' && order.train.date >= today;
+  const canRefund = (order.status === 'paid' || order.status === 'changed') && order.train.date >= today;
   const canChange = order.status === 'paid' && order.train.date > today;
 
   return (
@@ -259,18 +259,20 @@ function RefundModal({ order, onClose, onConfirm }) {
   const trainDate = order.train.date;
   const diffDays = Math.ceil((new Date(trainDate) - new Date(today)) / 86400000);
 
-  let ruleIdx = 3;
-  if (diffDays >= 2) ruleIdx = 0;
-  else if (diffDays === 1) ruleIdx = 1;
-  else if (diffDays === 0) ruleIdx = 2;
+  let ruleIdx = -1;
+  if (diffDays >= 25) ruleIdx = 0;
+  else if (diffDays >= 3) ruleIdx = 1;
+  else if (diffDays >= 1) ruleIdx = 2;
+  else if (diffDays === 0) ruleIdx = 3;
 
-  const rule = REFUND_RULES[ruleIdx];
-  const refundable = ruleIdx < 3;
+  const rule = ruleIdx >= 0 ? REFUND_RULES[ruleIdx] : null;
+  const refundable = ruleIdx >= 0;
 
   let refundAmount = 0;
-  if (ruleIdx === 0) refundAmount = order.totalAmount - 20;
-  else if (ruleIdx === 1) refundAmount = Math.round(order.totalAmount * 0.9);
-  else if (ruleIdx === 2) refundAmount = Math.round(order.totalAmount * 0.8);
+  if (ruleIdx === 0) refundAmount = Math.round(order.totalAmount * 0.99);
+  else if (ruleIdx === 1) refundAmount = Math.round(order.totalAmount * 0.97);
+  else if (ruleIdx === 2) refundAmount = Math.round(order.totalAmount * 0.95);
+  else if (ruleIdx === 3) refundAmount = Math.round(order.totalAmount * 0.90);
 
   return (
     <Modal isOpen onClose={onClose} title="申請退票" size="md">

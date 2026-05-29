@@ -48,7 +48,6 @@ export const CAR_TYPES = [
   { id: 'any',      name: '不限車廂' },
   { id: 'standard', name: '標準車廂' },
   { id: 'business', name: '商務車廂' },
-  { id: 'quiet',    name: '靜音車廂' },
 ];
 
 export const PAYMENT_METHODS = [
@@ -68,10 +67,10 @@ export const ORDER_STATUSES = {
 };
 
 export const REFUND_RULES = [
-  { condition: '出發前 2 天以上',      fee: '手續費 NT$20', note: '退還票價扣 NT$20' },
-  { condition: '出發前 1 天',          fee: '票價 10%',     note: '退還票價 90%' },
-  { condition: '出發當天（開車前）',    fee: '票價 20%',     note: '退還票價 80%' },
-  { condition: '開車後',               fee: '不可退票',     note: '恕不受理退票' },
+  { condition: '乘車前 25 日（含）以上', fee: '票價 1%',  note: '退還票價 99%' },
+  { condition: '乘車前 3–24 日',         fee: '票價 3%',  note: '退還票價 97%' },
+  { condition: '乘車前 1–2 日',          fee: '票價 5%',  note: '退還票價 95%' },
+  { condition: '乘車當日（列車過站前）', fee: '票價 10%', note: '退還票價 90%' },
 ];
 
 export function getBasePrice(fromId, toId, typeId) {
